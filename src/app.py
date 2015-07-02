@@ -4,8 +4,7 @@ when trying to publish the app to heroku.
 
 __author__ = 'Fredrik A. Madsen-Malmo'
 
-from flask import Flask
-from flask import g
+from flask import Flask, g
 from flask.ext.login import LoginManager
 
 import models
@@ -15,7 +14,8 @@ PORT = 8080
 HOST = '0.0.0.0'
 
 app = Flask(__name__)
-app.secret_key = ';abrov]pwdjoeiw9g-20[34I)(U)*(&T%*^&%^$aay38794809#$xertcfhgvjkhbLVKGHFHGB]]]}{><?'
+app.secret_key = ';abrov]pwdjoeiw9g-20[34I)(U)*(&T%*^& \
+                  %^$aay38794809#$xertcfhgvjkhbLVKGHFHGB]]]}{><?'
 
 login_manager = LoginManager()
 login_manager.init_app(app)
@@ -43,4 +43,10 @@ def after_request(response):
 	return response
 
 if __name__ == '__main__':
+	models.initialize()
+	models.User.create_user(
+		'mail.fredrikaugust@gmail.com', 
+		'password', 
+		True
+	)
 	app.run(debug=DEBUG, port=PORT, host=HOST)
