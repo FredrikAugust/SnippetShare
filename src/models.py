@@ -13,8 +13,8 @@ DATABASE = SqliteDatabase('socialen.db')
 class User(UserMixin, Model):
 	email = CharField(unique=True)
 	password = CharField(max_length=100)
-	joined = DateTimeField(default=datetime.datetime.now)
-	is_admin = BooleanField(defualt=false)
+	joined_at = DateTimeField(default=datetime.datetime.now)
+	is_admin = BooleanField(default=False)
 
 	class Meta:
 		database = DATABASE
@@ -33,5 +33,5 @@ class User(UserMixin, Model):
 
 def initialize():
 	DATABASE.connect()
-	DATABASE.create_tables(['User'], safe=True)
+	DATABASE.create_tables([User], safe=True)
 	DATABASE.close()

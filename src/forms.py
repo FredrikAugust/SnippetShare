@@ -11,7 +11,18 @@ from wtforms.validators import (DataRequired, Regexp, ValidationError,
 
 from models import User
 
+def email_exist(form, field):
+	"""This is a custom validatior used above.
+	It checks if the email already exists.
+	"""
+	if User.select().where(User.email == field.data).exists():
+		raise ValidationError('That email is already taken.')
+
 class RegisterForm(Form):
+	"""Validation for the registration form.
+	I decided not to use a username field as I feel it is 
+	unnecessary
+	"""
 	email = StringField(
 		'email',
 		validators=[
@@ -35,10 +46,21 @@ class RegisterForm(Form):
 		]
 	)
 
-
-def email_exist(form, field):
-	"""This is a custom validatior used above.
-	It checks if the email already exists.
+class LoginForm(Form):
+	"""Validation for the registration form.
+	I decided not to use a username field as I feel it is 
+	unnecessary
 	"""
-	if User.select().where(User.email == field.data).exists():
-		raise ValidationError('That email is already taken.')
+	email = StringField(
+		'email',
+		validators=[
+			DataRequired(),
+			Email()
+		]
+	)
+	password = PasswordField(
+		'password',
+		validators=[
+			DataRequired()
+		]
+	)
