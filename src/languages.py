@@ -1,5 +1,5 @@
 LANGUAGES = [
-	('', 'Automatic Detection'),
+	('', 'Other'),
 	('html', 'HTML'),
 	('css', 'CSS'),
 	('javascript', 'JavaScript'),

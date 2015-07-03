@@ -11,7 +11,7 @@ from flask.ext.bcrypt import generate_password_hash
 DATABASE = SqliteDatabase('socialen.db')
 
 class User(UserMixin, Model):
-	email = CharField(unique=True)
+	username = CharField(unique=True)
 	password = CharField(max_length=100)
 	joined_at = DateTimeField(default=datetime.datetime.now)
 	is_admin = BooleanField(default=False)
@@ -29,10 +29,10 @@ class User(UserMixin, Model):
 		)
 
 	@classmethod
-	def create_user(cls, email, password, admin=False):
+	def create_user(cls, username, password, admin=False):
 		try:
 			cls.create(
-				email=email,
+				username=username,
 				password=generate_password_hash(password),
 				is_admin=admin
 			)
@@ -46,8 +46,8 @@ class Post(Model):
 		related_name='posts'
 	)
 	content = TextField()
-	explanation = TextField()
 	language = TextField()
+	display_language = TextField()
 
 	class Meta:
 		database = DATABASE

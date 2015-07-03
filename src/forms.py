@@ -7,29 +7,28 @@ __author__ = 'Fredrik A. Madsen-Malmo'
 from flask_wtf import Form
 from wtforms import StringField, PasswordField, SelectField, TextAreaField
 from wtforms.validators import (DataRequired, Regexp, ValidationError,	
-								Email, Length, EqualTo)
+								Length, EqualTo)
 
 from models import User
 from languages import LANGUAGES
 
-def email_exist(form, field):
+def username_exist(form, field):
 	"""This is a custom validatior used above.
-	It checks if the email already exists.
+	It checks if the username already exists.
 	"""
-	if User.select().where(User.email == field.data).exists():
-		raise ValidationError('That email is already taken.')
+	if User.select().where(User.username == field.data).exists():
+		raise ValidationError('That usernmae is already taken.')
 
 class RegisterForm(Form):
 	"""Validation for the registration form.
-	I decided not to use a username field as I feel it is 
+	I decided not to use a email field as I feel it is 
 	unnecessary
 	"""
-	email = StringField(
-		'email',
+	username = StringField(
+		'username',
 		validators=[
 			DataRequired(),
-			Email(),
-			email_exist  # Custom validator
+			username_exist  # Custom validator
 		]
 	)
 	password = PasswordField(
@@ -52,11 +51,10 @@ class LoginForm(Form):
 	I decided not to use a username field as I feel it is 
 	unnecessary
 	"""
-	email = StringField(
-		'email',
+	username = StringField(
+		'username',
 		validators=[
-			DataRequired(),
-			Email()
+			DataRequired()
 		]
 	)
 	password = PasswordField(

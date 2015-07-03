@@ -1,11 +1,11 @@
 {% extends 'template.html' %}
 {% from 'macros.html' import render_stream %}
 
-{% block title %}Home {{ super() }}{% endblock %}
+{% block title %}{{ current_user.username }} {{ super() }}{% endblock %}
 
 {% block body %}
 
-<h1>Home</h1><hr>
+<h1>Profile</h1><hr>
 
 {{ render_stream(stream) }}
 

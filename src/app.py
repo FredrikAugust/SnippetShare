@@ -13,6 +13,7 @@ from flask.ext.bcrypt import check_password_hash
 
 import models
 import forms
+from logic import get_lang_name, get_short_name
 
 DEBUG = True
 PORT = 8080
@@ -66,7 +67,7 @@ def register():
         flash('Registration complete.', 'success')
 
         model.User.create_user(
-            email = form.email.data,
+            username = form.username.data,
             password = form.password.data
         )
 
@@ -80,7 +81,7 @@ def login():
 
     if form.validate_on_submit():
         try:
-            user = models.User.get(models.User.email == form.email.data)
+            user = models.User.get(models.User.username == form.username.data)
         except models.DoesNotExist:
             flash('Your credentials are not correct', 'warning')
         else:
@@ -112,8 +113,8 @@ def new_post():
             models.Post.create(
                 user=g.user._get_current_object(),
                 content=form.content.data.strip(),
-                explanation=form.explanation.data.strip(),
-                language=form.language.data
+                language=form.language.data,
+                display_language=get_lang_name(form.language.data)
             )
 
             flash('Snippet shared', 'success')
@@ -125,7 +126,11 @@ def new_post():
 
 @app.route('/<profile>')
 def profile(profile):
-    return 'Profile soon to come.'
+    stream = (models.Post.select().where(
+                models.Post.user == models.User.get(
+                models.User.username == profile)))
+
+    return render_template('profile.html', stream=stream)
 
 @app.route('/')
 def index():
@@ -133,13 +138,27 @@ def index():
 
     return render_template('index.html', stream=stream)
 
-@app.route('/search/<query>', methods=['GET'])
-def search(query):
-    stream = (models.Post.select()
-                .where(models.Post.content.contains(query))
-                .limit(100))
+@app.route('/delete/<timestamp>')
+def delete(timestamp):
+    models.Post.get().where(models.timestamp == timestamp).delete_instance()
 
-    return render_template('index.html', stream=stream)
+@app.route('/search/')
+@app.route('/search/<query>', methods=['GET'])
+def search(query=False):
+    if not query:
+        flash('Please enter a search query.', 'warning')
+        return redirect(url_for('index'))
+
+    if query[0] == '@':
+        stream = (models.Post.select()
+                    .where(models.Post.language == get_short_name(query[1:]))
+                    .limit(100))
+    else:
+        stream = (models.Post.select()
+                    .where(models.Post.content.contains(query))
+                    .limit(100))
+
+    return render_template('index.html', stream=stream, get_lang_name=get_lang_name)
 
 ######################################
 
@@ -147,15 +166,15 @@ if __name__ == '__main__':
     models.initialize()
     try:
         models.User.create_user(
-            email='mail.fredrikaugust@gmail.com', 
+            username='MrMadsenMalmo',
             password='password', 
             admin=True
         )
         models.Post.create(
-            user=models.User.get(models.User.email == 'mail.fredrikaugust@gmail.com'),
-            content='_Testing123_',
-            explanation='Hello!',
-            language='markdown'
+            user=models.User.get(models.User.username == 'MrMadsenMalmo'),
+            content='console.log("Hello World!")',
+            language='javascript',
+            display_language=get_lang_name('javascript')
         )
     except ValueError:
         pass
