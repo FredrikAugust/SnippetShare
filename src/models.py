@@ -46,6 +46,8 @@ class Post(Model):
 		related_name='posts'
 	)
 	content = TextField()
+	explanation = TextField()
+	language = TextField()
 
 	class Meta:
 		database = DATABASE
@@ -53,5 +55,5 @@ class Post(Model):
 
 def initialize():
 	DATABASE.connect()
-	DATABASE.create_tables([User], safe=True)
+	DATABASE.create_tables([User, Post], safe=True)
 	DATABASE.close()

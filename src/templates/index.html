@@ -1,17 +1,25 @@
 {% extends 'template.html' %}
-{% from 'macros.html' import render_field %}
 
-{% block title %}Home{% endblock %}
+{% block title %}Home {{ super() }}{% endblock %}
 
 {% block body %}
 
-<form method='POST' action='{{ url_for('new_post') }}' class='form'>
-	{{ form.hidden_tag() }}
-	{% for field in form %}
-		{{ render_field(field) }}
+<div class='stream'>
+	{% for post in stream %}
+		<div class='row'>
+			<div class='col-xs-12'>
+				<p><a href='{{ url_for('index') }}{{ post.user.email }}'>{{ post.user.email }}</a> | <time data-time='{{ post.timestamp }}' class='disttime small' datetime='{{ post.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}'>{{ post.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}</time></p>
+			</div>
+			
+			<div class='col-sm-6'>
+				<pre><code class='{{ post.language }}'>{{ post.content }}</code></pre>
+			</div>
+			<div class='col-sm-6'>
+				<p>{{ post.explanation.strip() }}</p>
+			</div>
+		</div>
+	<hr>
 	{% endfor %}
-
-	<button type='submit'>Post</button>
-</form>
+</div>
 
 {% endblock %}

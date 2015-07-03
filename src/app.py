@@ -82,14 +82,14 @@ def login():
         try:
             user = models.User.get(models.User.email == form.email.data)
         except models.DoesNotExist:
-            flash('Your credentials are not correct', 'error')
+            flash('Your credentials are not correct', 'warning')
         else:
             if check_password_hash(user.password, form.password.data):
                 login_user(user)
-                flash('You are now logged in', 'success')
+                flash('You are now logged in', 'info')
                 return redirect(url_for('index'))
             else:
-                flash('Your credentials are not correct', 'error')
+                flash('Your credentials are not correct', 'warning')
 
     return render_template('login.html', form=form)
 
@@ -98,7 +98,7 @@ def login():
 def logout():
     logout_user()
 
-    flash('You have been logged out successfully')
+    flash('You have been logged out successfully', 'info')
 
     return redirect(url_for('index'))
 
@@ -121,14 +121,25 @@ def new_post():
         except TypeError:
             raise 'Encountered error while posting'
 
-    flash('Please fill in all fields.')
-    return redirect(url_for('index'))
+    return render_template('new_post.html', form=form)
+
+@app.route('/<profile>')
+def profile(profile):
+    return 'Profile soon to come.'
 
 @app.route('/')
 def index():
-    form = forms.PostForm()
+    stream = models.Post.select().limit(100)
 
-    return render_template('index.html', form=form)
+    return render_template('index.html', stream=stream)
+
+@app.route('/search/<query>', methods=['GET'])
+def search(query):
+    stream = (models.Post.select()
+                .where(models.Post.content.contains(query))
+                .limit(100))
+
+    return render_template('index.html', stream=stream)
 
 ######################################
 
@@ -139,6 +150,12 @@ if __name__ == '__main__':
             email='mail.fredrikaugust@gmail.com', 
             password='password', 
             admin=True
+        )
+        models.Post.create(
+            user=models.User.get(models.User.email == 'mail.fredrikaugust@gmail.com'),
+            content='_Testing123_',
+            explanation='Hello!',
+            language='markdown'
         )
     except ValueError:
         pass
