@@ -1,0 +1,20 @@
+LANGUAGES = [
+	('', 'Automatic Detection'),
+	('html', 'HTML'),
+	('css', 'CSS'),
+	('javascript', 'JavaScript'),
+	('cs', 'C#'),
+	('cpp', 'C++'),
+	('python', 'Python'),
+	('ruby', 'Ruby'),
+	('haskell', 'Haskell'),
+	('php', 'PHP'),
+	('coffeescript', 'CoffeeScript'),
+	('perl', 'Perl'),
+	('go', 'Go'),
+	('scss', 'SCSS'),
+	('markdown', 'Markdown'),
+	('django', 'Django'),
+	('json', 'JSON'),
+	('lua', 'Lua')
+]

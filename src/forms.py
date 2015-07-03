@@ -5,11 +5,12 @@ regarding interaction with forms
 __author__ = 'Fredrik A. Madsen-Malmo'
 
 from flask_wtf import Form
-from wtforms import StringField, PasswordField
+from wtforms import StringField, PasswordField, SelectField, TextAreaField
 from wtforms.validators import (DataRequired, Regexp, ValidationError,	
 								Email, Length, EqualTo)
 
 from models import User
+from languages import LANGUAGES
 
 def email_exist(form, field):
 	"""This is a custom validatior used above.
@@ -63,4 +64,22 @@ class LoginForm(Form):
 		validators=[
 			DataRequired()
 		]
+	)
+
+class PostForm(Form):
+	content = TextAreaField(
+		'Share your snippet with the world',
+		validators=[
+			DataRequired()
+		]
+	)
+	explanation = TextAreaField(
+		'Care to explain?',
+		validators=[
+			DataRequired()
+		]
+	)
+	language = SelectField(
+		'Select syntax highlighting',
+		choices=LANGUAGES
 	)

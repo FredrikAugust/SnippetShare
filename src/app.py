@@ -7,7 +7,8 @@ __author__ = 'Fredrik A. Madsen-Malmo'
 from flask import (Flask, g, flash, redirect, 
                     render_template, url_for)
 from flask.ext.login import (LoginManager, login_user, 
-                            logout_user, login_required)
+                            logout_user, login_required,
+                            current_user)
 from flask.ext.bcrypt import check_password_hash
 
 import models
@@ -41,9 +42,10 @@ def load_user(user_id):
 
 @app.before_request
 def before_request():
-	"""Connect to db before each req"""
-	g.db = models.DATABASE
-	g.db.connect()
+    """Connect to db before each req"""
+    g.db = models.DATABASE
+    g.db.connect()
+    g.user = current_user
 
 @app.after_request
 def after_request(response):
@@ -100,9 +102,33 @@ def logout():
 
     return redirect(url_for('index'))
 
+@app.route('/new_post', methods=['POST', 'GET'])
+@login_required
+def new_post():
+    form = forms.PostForm()
+
+    if form.validate_on_submit():
+        try:
+            models.Post.create(
+                user=g.user._get_current_object(),
+                content=form.content.data.strip(),
+                explanation=form.explanation.data.strip(),
+                language=form.language.data
+            )
+
+            flash('Snippet shared', 'success')
+            return redirect(url_for('index'))
+        except TypeError:
+            raise 'Encountered error while posting'
+
+    flash('Please fill in all fields.')
+    return redirect(url_for('index'))
+
 @app.route('/')
 def index():
-    return 'Something works.'
+    form = forms.PostForm()
+
+    return render_template('index.html', form=form)
 
 ######################################
 
