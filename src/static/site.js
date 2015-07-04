@@ -18,11 +18,9 @@ $(document).ready(function() {
 	// DELETE
 	$('.delete').on('click', function(e) {
 		if ($(this).text() == 'delete') {
+			e.preventDefault();
 			$('.delete').text('delete');
 			$(this).text('Are you sure?');
-		} else {
-			window.location = $('#home_link').attr('href') + 'delete/' + 
-								$(this).closest('div').prev().find('time').attr('data-time');
 		}
 	});
 
@@ -37,6 +35,19 @@ $(document).ready(function() {
 	        range.selectNodeContents(target);
 	        selection.removeAllRanges();
 	        selection.addRange(range);
+		}
+	});
+
+	$('.delete_acc').on('click', function(e) {
+		if ($(this).text() == 'Delete account') {
+			e.preventDefault();
+			$(this).text('Are you sure?');
+		} else if ($(this).text() == 'Are you sure?') {
+			if (prompt('Type DELETE to delete account. All posts that belong to the account will also be removed.') == 'DELETE') {
+				console.log('Deleting account.');
+			} else {
+				e.preventDefault();
+			}
 		}
 	});
 });

@@ -170,16 +170,18 @@ def search(query=False):
 
     return render_template('index.html', stream=stream)
 
-@app.route('/delete/<timestamp>', methods=['POST', 'GET'])
+@app.route('/delete/<int:delete_id>', methods=['POST', 'GET'])
 @login_required
-def delete(timestamp):
-    target = models.Post.get(models.Post.timestamp == timestamp)
+def delete(delete_id):
+    target = models.Post.get(models.Post.id == delete_id)
 
     if target.user == current_user:
         try:
             target.delete_instance()
+
             flash('Post successfully deleted', 'success')
             return redirect(url_for('index'))
+
         except IntegrityError:
             flash('Error occured while deleting post', 'warning')
             return redirect(url_for('index'))
@@ -259,6 +261,46 @@ def unfollow(username):
 def post(post_id):
     stream = models.Post.select().where(models.Post.id == post_id)
     return render_template('post.html', stream=stream)
+
+@app.route('/<user>/edit', methods=['GET', 'POST'])
+def edit_account(user):
+    target = models.User.get(models.User.username == user)
+
+    form = forms.EditUserForm()
+
+    if target.username == current_user.username:
+        if form.validate_on_submit():
+            try:
+                target.update(
+                    password=models.generate_password_hash(form.password.data)
+                ).execute()
+
+                flash('Password changed.', 'success')
+                return redirect(url_for('index'))
+
+            except TypeError:
+                flash('Encountered error while editing.', 'warning')
+
+    return render_template('edit_user.html', form=form, user=target)
+
+@app.route('/<user>/delete', methods=['POST', 'GET'])
+def delete_account(user):
+    target = models.User.get(models.User.username == user)
+
+    if target.username == current_user.username:
+        try:
+            for row in (models.Post.select()
+                        .join(models.User)
+                        .where(models.User.username == user)):
+                row.delete_instance()
+
+            target.delete_instance()
+
+            flash('Account deleted, along with all posts.')
+            return redirect(url_for('index'))
+        except Exception:
+            flash('Could not delete account.', 'warning')
+            return redirect(url_for('index'))
 
 ######################################
 

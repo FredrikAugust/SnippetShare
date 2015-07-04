@@ -46,6 +46,22 @@ class RegisterForm(Form):
 		]
 	)
 
+class EditUserForm(Form):
+	password = PasswordField(
+		'password',
+		validators=[
+			DataRequired(),
+			Length(min=4),
+			EqualTo('password2', message='Passwords must match.')
+		]
+	)
+	password2 = PasswordField(
+		'retype password',
+		validators=[
+			DataRequired()
+		]
+	)
+
 class LoginForm(Form):
 	"""Validation for the registration form.
 	I decided not to use a username field as I feel it is 
