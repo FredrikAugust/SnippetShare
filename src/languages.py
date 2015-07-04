@@ -16,5 +16,7 @@ LANGUAGES = [
 	('markdown', 'Markdown'),
 	('django', 'Django'),
 	('json', 'JSON'),
-	('lua', 'Lua')
+	('lua', 'Lua'),
+	('c', 'c'),
+	('bash', 'Bash')
 ]
