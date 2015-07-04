@@ -186,25 +186,31 @@ def delete(timestamp):
     
     return redirect(url_for('index'))
 
-@app.route('/edit/<timestamp>')
+@app.route('/edit/<int:edit_id>', methods=['POST', 'GET'])
 @login_required
-def edit(timestamp):
-    target = models.Post.get(models.Post.timestamp == timestamp)
+def edit(edit_id):
+    target = models.Post.get(models.Post.id == edit_id)
 
-    if target.user == current_user:
-        form = forms.PostForm()
+    form = forms.PostForm()
 
+    if target.user.username == current_user.username:
         if form.validate_on_submit():
             try:
-                target.content = form.content.data.strip()
-                target.language = form.language.data
-                target.display_language = get_lang_name(form.language.data)
+                models.Post.create(
+                    timestamp=target.timestamp,
+                    user=g.user._get_current_object(),
+                    content=form.content.data.strip(),
+                    language=form.language.data,
+                    display_language=get_lang_name(form.language.data)
+                )
+
+                target.delete_instance()
 
                 flash('Snippet edited', 'success')
                 return redirect(url_for('index'))
 
             except TypeError:
-                raise 'Encountered error while editing'
+                flash('Encountered error while editing.', 'warning')
     
         form.content.data = target.content
         form.language.data = target.language

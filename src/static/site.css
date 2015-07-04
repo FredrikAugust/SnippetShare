@@ -43,3 +43,7 @@
 .followers {
 	font-family: monospace;
 }
+
+.post_a {
+	text-decoration: none !important;
+}

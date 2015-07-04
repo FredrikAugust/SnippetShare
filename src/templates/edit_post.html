@@ -1,11 +1,11 @@
 {% extends 'template.html' %}
 {% from 'macros.html' import render_field %}
 
-{% block title %}New Snippet {{ super() }}{% endblock %}
+{% block title %}Edit Snippet {{ super() }}{% endblock %}
 
 {% block body %}
 <h1>Edit post</h1><hr>
-<form method='POST' action='{{ url_for('new_post') }}'>
+<form method='POST' action='{{ url_for('edit', edit_id=post.id) }}'>
 	{{ form.hidden_tag() }}
 	{% for field in form %}
 		{{ render_field(field) }}

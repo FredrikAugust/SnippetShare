@@ -24,9 +24,9 @@
 			</div>
 			
 			<div class='col-sm-12'>
-				<a href='{{ url_for('post', post_id=post.id) }}'><pre><code class='{{ post.language }}'>{{ post.content[0:length] }}</code></pre></a>
+				<a href='{{ url_for('post', post_id=post.id) }}' class='post_a'><pre><code class='{{ post.language }}'>{{ post.content[0:length] }}</code></pre></a>
 				{% if post.user.username == g.user.username %}
-					<a class='small delete'>delete</a> | <a class='small edit'>edit</a>
+					<a class='small delete'>delete</a> | <a class='small edit' href={{ url_for('edit', edit_id=post.id) }}>edit</a>
 				{% endif %}
 			</div>
 		</div>

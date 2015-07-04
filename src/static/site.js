@@ -26,14 +26,17 @@ $(document).ready(function() {
 		}
 	});
 
-	// EDIT
-	$('.edit').on('click', function(e){
-		if ($(this).text() == 'edit') {
-			$('.edit').text('edit');
-			$(this).text('Proceed?');
-		} else {
-			window.location = $('#home_link').attr('href') + 'edit/' + 
-								$(this).closest('div').prev().find('time').attr('data-time');
+	$('.post_a').on('click', function(event) {
+		if (/post/i.test(window.location) == true) {
+			event.preventDefault();
+
+			target = this.childNodes[0].childNodes[0];
+
+	        var selection = window.getSelection();            
+	        var range = document.createRange();
+	        range.selectNodeContents(target);
+	        selection.removeAllRanges();
+	        selection.addRange(range);
 		}
 	});
 });
