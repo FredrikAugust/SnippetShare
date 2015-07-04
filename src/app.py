@@ -4,6 +4,7 @@ when trying to publish the app to heroku.
 
 __author__ = 'Fredrik A. Madsen-Malmo'
 
+import datetime
 from flask import (Flask, g, flash, redirect, 
                     render_template, url_for)
 from flask.ext.login import (LoginManager, login_user, 
@@ -66,12 +67,12 @@ def register():
     if form.validate_on_submit():
         flash('Registration complete.', 'success')
 
-        model.User.create_user(
+        models.User.create_user(
             username = form.username.data,
             password = form.password.data
         )
 
-        return redirect_for(url_for('index'))
+        return redirect(url_for('index'))
 
     return render_template('register.html', form=form)
 
@@ -126,21 +127,26 @@ def new_post():
 
 @app.route('/<profile>')
 def profile(profile):
-    stream = (models.Post.select().where(
-                models.Post.user == models.User.get(
-                models.User.username == profile)))
+    temp_user = (models.User.get(models.User.username == profile))
 
-    return render_template('profile.html', stream=stream)
+    stream = temp_user.get_stream()
+
+    temp_user.followers = temp_user.get_followers()
+    temp_user.following = temp_user.get_following()
+
+    try:
+        if models.Relationship.get(from_user=g.user._get_current_object(), to_user=temp_user):
+            temp_user.is_being_followed = True
+    except Exception:
+        temp_user.is_being_followed = False
+
+    return render_template('profile.html', stream=stream, user=temp_user)
 
 @app.route('/')
 def index():
     stream = models.Post.select().limit(100)
 
     return render_template('index.html', stream=stream)
-
-@app.route('/delete/<timestamp>')
-def delete(timestamp):
-    models.Post.get().where(models.timestamp == timestamp).delete_instance()
 
 @app.route('/search/')
 @app.route('/search/<query>', methods=['GET'])
@@ -158,7 +164,86 @@ def search(query=False):
                     .where(models.Post.content.contains(query))
                     .limit(100))
 
-    return render_template('index.html', stream=stream, get_lang_name=get_lang_name)
+    return render_template('index.html', stream=stream)
+
+@app.route('/delete/<timestamp>', methods=['POST', 'GET'])
+@login_required
+def delete(timestamp):
+    target = models.Post.get(models.Post.timestamp == timestamp)
+
+    if target.user == current_user:
+        try:
+            target.delete_instance()
+            flash('Post successfully deleted', 'success')
+            return redirect(url_for('index'))
+        except IntegrityError:
+            flash('Error occured while deleting post', 'warning')
+            return redirect(url_for('index'))
+    
+    return redirect(url_for('index'))
+
+@app.route('/edit/<timestamp>')
+@login_required
+def edit(timestamp):
+    target = models.Post.get(models.Post.timestamp == timestamp)
+
+    if target.user == current_user:
+        form = forms.PostForm()
+
+        if form.validate_on_submit():
+            try:
+                target.content = form.content.data.strip()
+                target.language = form.language.data
+                target.display_language = get_lang_name(form.language.data)
+
+                flash('Snippet edited', 'success')
+                return redirect(url_for('index'))
+
+            except TypeError:
+                raise 'Encountered error while editing'
+    
+        form.content.data = target.content
+        form.language.data = target.language
+
+    return render_template('edit_post.html', form=form, post=target)
+
+@app.route('/follow/<username>')
+@login_required
+def follow(username):
+    try:
+        to_user = models.User.get(models.User.username**username)
+    except models.DoesNotExist:
+        pass
+    else:
+        try:
+            models.Relationship.create(
+                from_user = g.user._get_current_object(),
+                to_user=to_user
+            )
+        except models.IntegrityError:
+            pass
+        else:
+            flash('You are now following ' + to_user.username + '.', 'success')
+    return redirect(url_for('index') + to_user.username)
+
+@app.route('/unfollow/<username>')
+@login_required
+def unfollow(username):
+    try:
+        to_user = models.User.get(models.User.username**username)
+    except models.DoesNotExist:
+        pass
+    else:
+        try:
+            models.Relationship.get(
+                from_user = g.user._get_current_object(),
+                to_user=to_user
+            ).delete_instance()
+        except models.IntegrityError:
+            pass
+        else:
+            flash('You are no longer following ' + to_user.username + '.', 'success')
+    return redirect(url_for('index') + to_user.username)
 
 ######################################
 
@@ -170,9 +255,22 @@ if __name__ == '__main__':
             password='password', 
             admin=True
         )
+
+        models.User.create_user(
+            username='Thomas',
+            password='password'
+        )
+
         models.Post.create(
             user=models.User.get(models.User.username == 'MrMadsenMalmo'),
             content='console.log("Hello World!")',
+            language='javascript',
+            display_language=get_lang_name('javascript')
+        )
+
+        models.Post.create(
+            user=models.User.get(models.User.username == 'Thomas'),
+            content='console.log("Hello World from Thomas!")',
             language='javascript',
             display_language=get_lang_name('javascript')
         )

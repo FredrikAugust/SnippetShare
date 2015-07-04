@@ -1,6 +1,10 @@
 # Login functions for the site
 
 from languages import LANGUAGES
+import models
+
+from flask import g
+from flask.ext.login import current_user
 
 def get_lang_name(lang_short):
 	for value, name in LANGUAGES:

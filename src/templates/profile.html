@@ -1,12 +1,16 @@
 {% extends 'template.html' %}
 {% from 'macros.html' import render_stream %}
 
-{% block title %}{{ current_user.username }} {{ super() }}{% endblock %}
+{% block title %}{{ user.username }} {{ super() }}{% endblock %}
 
 {% block body %}
 
-<h1>Profile</h1><hr>
+<h1>{{ user.username }} {% if not g.user.username == user.username %}<a href='{{ url_for('index') }}{%if user.is_being_followed%}un{%endif%}follow/{{ user.username }}' class='small follow follow_{{ user.is_being_followed }} glyphicon glyphicon-heart'></a>{% else %} <a class='small' id='edit-profile'>Edit</a>{% endif %}</h1>
 
+<!-- Profile stuff -->
+<h4>Followers: <span id='followers'>{{ user.followers.count() }}</span></h4>
+<h4>Following: <span id='following'>{{ user.following.count() }}</span></h4>
+<hr>
 {{ render_stream(stream) }}
 
 {% endblock %}

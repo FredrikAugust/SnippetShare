@@ -3,7 +3,7 @@ LANGUAGES = [
 	('html', 'HTML'),
 	('css', 'CSS'),
 	('javascript', 'JavaScript'),
-	('cs', 'C#'),
+	('cs', 'C-Sharp'),
 	('cpp', 'C++'),
 	('python', 'Python'),
 	('ruby', 'Ruby'),

@@ -25,7 +25,9 @@
 			
 			<div class='col-sm-12'>
 				<pre><code class='{{ post.language }}'>{{ post.content }}</code></pre>
-				<a class='small' id='delete'>delete</a>
+				{% if post.user.username == g.user.username %}
+					<a class='small delete'>delete</a> | <a class='small edit'>edit</a>
+				{% endif %}
 			</div>
 		</div>
 	<hr>

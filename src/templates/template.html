@@ -17,38 +17,31 @@
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">
 </head>
 <body>
-	<nav class="navbar navbar-default collapse navbar-collapse">
+	<nav class="navbar navbar-default navbar-collapse">
 	  <div class="container-fluid container">
-	    <!-- Brand and toggle get grouped for better mobile display -->
-	    <div class="navbar-header">
-	      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
-	        <span class="sr-only">Toggle navigation</span>
-	        <span class="icon-bar"></span>
-	        <span class="icon-bar"></span>
-	        <span class="icon-bar"></span>
-	      </button>
-	    </div>
 	    {% if not current_user.is_authenticated() %}
 	    <form class="navbar-form navbar-left" id='new_post_form'>
 			<a title='Home' href='{{ url_for('index') }}' class="btn btn-default glyphicon glyphicon-home" id='home_link'></a>
+			<a href="{{ url_for('login') }}" class='hidden-sm hidden-md hidden-lg glyphicon glyphicon-off btn btn-default' title='Sign in'></a>
 		</form>
 		{% endif %}
 	    {% if current_user.is_authenticated() %}
 		    <ul class="nav navbar-nav navbar-right">
-		    	<li><a href="{{ url_for('logout') }}" class='glyphicon glyphicon-off' title='Sign out'></a></li>
+		    	<li><a href="{{ url_for('logout') }}" class='glyphicon glyphicon-off hidden-xs' title='Sign out'></a></li>
 		    </ul>
 	    	<form class="navbar-form navbar-left" id='new_post_form'>
 	    		<a title='Home' href='{{ url_for('index') }}' class="btn btn-default glyphicon glyphicon-home" id='home_link'></a>
 		    	<a title='New Post' href='{{ url_for('new_post') }}' class="btn btn-default glyphicon glyphicon-pencil"></a>
 		    	<a title='Profile' href='{{ url_for('index') }}{{ current_user.username }}' class="btn btn-default glyphicon glyphicon-user"></a>
+		    	<a href="{{ url_for('logout') }}" class='glyphicon glyphicon-off hidden-md hidden-lg btn btn-default hidden-sm' title='Sign out'></a>
 		  	</form>
 	    {% else %}
 	    	<ul class="nav navbar-nav navbar-right">
-		    	<li><a href="{{ url_for('login') }}" class='glyphicon glyphicon-home' title='Sign in'></a></li>
+		    	<li><a href="{{ url_for('login') }}" class='glyphicon glyphicon-off hidden-xs' title='Sign out'></a></li>
 		    </ul>
 	    {% endif %}
 	    <!-- Collect the nav links, forms, and other content for toggling -->
-	    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+	    <div class='collapse navbar-collapse' id="bs-example-navbar-collapse-1">
 	      <form class="navbar-form navbar-right" role="search" id='search'>
 	        <div class="form-group">
 	          <input type="text" class="form-control" id='search_input' placeholder="Search">

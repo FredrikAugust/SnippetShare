@@ -8,7 +8,7 @@ from peewee import *
 from flask.ext.login import UserMixin
 from flask.ext.bcrypt import generate_password_hash
 
-DATABASE = SqliteDatabase('socialen.db')
+DATABASE = SqliteDatabase('snippetshare.db')
 
 class User(UserMixin, Model):
 	username = CharField(unique=True)
@@ -25,7 +25,26 @@ class User(UserMixin, Model):
 
 	def get_stream(self):
 		return Post.select().where(
+			(Post.user << self.get_following()) |
 			(Post.user == self)
+		)
+
+	def get_following(self):
+		return (
+			User.select().join(
+				Relationship, on=Relationship.to_user
+			).where(
+				Relationship.from_user == self
+			)
+		)
+
+	def get_followers(self):
+		return (
+			User.select().join(
+				Relationship, on=Relationship.from_user
+			).where(
+				Relationship.to_user == self
+			)
 		)
 
 	@classmethod
@@ -53,7 +72,23 @@ class Post(Model):
 		database = DATABASE
 		order_by = ('-timestamp',)
 
+class Relationship(Model):
+	from_user = ForeignKeyField(
+		User,
+		related_name='relationships'
+	)
+	to_user = ForeignKeyField(
+		User,
+		related_name='related_to'
+	)
+
+	class Meta:
+		database = DATABASE
+		indexes = (
+			(('from_user', 'to_user'), True)
+		)
+
 def initialize():
 	DATABASE.connect()
-	DATABASE.create_tables([User, Post], safe=True)
+	DATABASE.create_tables([User, Post, Relationship], safe=True)
 	DATABASE.close()

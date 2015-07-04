@@ -17,7 +17,7 @@ def username_exist(form, field):
 	It checks if the username already exists.
 	"""
 	if User.select().where(User.username == field.data).exists():
-		raise ValidationError('That usernmae is already taken.')
+		raise ValidationError('That username is already taken.')
 
 class RegisterForm(Form):
 	"""Validation for the registration form.
@@ -67,12 +67,6 @@ class LoginForm(Form):
 class PostForm(Form):
 	content = TextAreaField(
 		'Share your snippet with the world',
-		validators=[
-			DataRequired()
-		]
-	)
-	explanation = TextAreaField(
-		'Care to explain?',
 		validators=[
 			DataRequired()
 		]
