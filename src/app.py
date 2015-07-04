@@ -17,7 +17,7 @@ import models
 import forms
 from logic import get_lang_name, get_short_name
 
-DEBUG = True
+DEBUG = False
 PORT = port = int(os.environ.get('PORT', 33507))
 HOST = '0.0.0.0'
 
