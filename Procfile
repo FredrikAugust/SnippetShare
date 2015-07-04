@@ -1,1 +1,1 @@
-web: foreman start
+web: python ./src/app.py

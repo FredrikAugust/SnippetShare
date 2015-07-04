@@ -4,6 +4,7 @@ when trying to publish the app to heroku.
 
 __author__ = 'Fredrik A. Madsen-Malmo'
 
+import os
 import datetime
 from flask import (Flask, g, flash, redirect, 
                     render_template, url_for)
@@ -17,7 +18,7 @@ import forms
 from logic import get_lang_name, get_short_name
 
 DEBUG = True
-PORT = 8080
+PORT = port = int(os.environ.get('PORT', 33507))
 HOST = '0.0.0.0'
 
 app = Flask(__name__)
