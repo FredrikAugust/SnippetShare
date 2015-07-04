@@ -1,5 +1,5 @@
-"""This is the main app, this is basically where shit goes wrong 
-when trying to publish the app to heroku.
+"""Main app, horrible code.
+Create pr-s and issues when you see something wrong.
 """
 
 __author__ = 'Fredrik A. Madsen-Malmo'
@@ -73,6 +73,10 @@ def register():
             password = form.password.data
         )
 
+        login_user(models.User.get(models.User.username == form.username.data))
+
+        flash('You are now logged in.', 'success')
+
         return redirect(url_for('index'))
 
     return render_template('register.html', form=form)
@@ -89,7 +93,7 @@ def login():
         else:
             if check_password_hash(user.password, form.password.data):
                 login_user(user)
-                flash('You are now logged in', 'info')
+                flash('You are now logged in.', 'success')
                 return redirect(url_for('index'))
             else:
                 flash('Your credentials are not correct', 'warning')
