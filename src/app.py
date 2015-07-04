@@ -131,7 +131,6 @@ def profile(profile):
     try:
         user = models.User.select().where(models.User.username == profile).get()
     except Exception:
-        flash('User does not exist.', 'warning')
         return redirect(url_for('index'))
 
     stream = user.get_stream()
