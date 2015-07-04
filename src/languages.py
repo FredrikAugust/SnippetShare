@@ -17,6 +17,6 @@ LANGUAGES = [
 	('django', 'Django'),
 	('json', 'JSON'),
 	('lua', 'Lua'),
-	('c', 'c'),
+	('c', 'C'),
 	('bash', 'Bash')
 ]
