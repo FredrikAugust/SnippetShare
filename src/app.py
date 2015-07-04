@@ -128,20 +128,24 @@ def new_post():
 
 @app.route('/<profile>')
 def profile(profile):
-    temp_user = (models.User.get(models.User.username == profile))
+    try:
+        user = models.User.select().where(models.User.username == profile).get()
+    except Exception:
+        flash('User does not exist.', 'warning')
+        return redirect(url_for('index'))
 
-    stream = temp_user.get_stream()
+    stream = user.get_stream()
 
-    temp_user.followers = temp_user.get_followers()
-    temp_user.following = temp_user.get_following()
+    user.followers = user.get_followers()
+    user.following = user.get_following()
 
     try:
-        if models.Relationship.get(from_user=g.user._get_current_object(), to_user=temp_user):
-            temp_user.is_being_followed = True
+        if models.Relationship.get(from_user=g.user._get_current_object(), to_user=user):
+            user.is_being_followed = True
     except Exception:
-        temp_user.is_being_followed = False
+        user.is_being_followed = False
 
-    return render_template('profile.html', stream=stream, user=temp_user)
+    return render_template('profile.html', stream=stream, user=user)
 
 @app.route('/')
 def index():
