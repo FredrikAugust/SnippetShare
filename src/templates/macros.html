@@ -14,7 +14,7 @@
 
 {% endmacro %}
 
-{% macro render_stream(stream) %}
+{% macro render_stream(stream, length=10000) %}
 
 <div class='stream'>
 	{% for post in stream %}
@@ -24,7 +24,7 @@
 			</div>
 			
 			<div class='col-sm-12'>
-				<a href='{{ url_for('post', post_id=post.id) }}'><pre><code class='{{ post.language }}'>{{ post.content }}</code></pre></a>
+				<a href='{{ url_for('post', post_id=post.id) }}'><pre><code class='{{ post.language }}'>{{ post.content[0:length] }}</code></pre></a>
 				{% if post.user.username == g.user.username %}
 					<a class='small delete'>delete</a> | <a class='small edit'>edit</a>
 				{% endif %}

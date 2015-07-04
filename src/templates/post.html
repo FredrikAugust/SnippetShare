@@ -5,8 +5,8 @@
 
 {% block body %}
 
-<h1>Home</h1><hr>
+<h1>{{ stream[0].user.username }} | {{ stream[0].timestamp }}</h1><hr>
 
-{{ render_stream(stream, 200) }}
+{{ render_stream(stream) }}
 
 {% endblock %}

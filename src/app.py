@@ -252,7 +252,7 @@ def unfollow(username):
 @app.route('/post/<int:post_id>')
 def post(post_id):
     stream = models.Post.select().where(models.Post.id == post_id)
-    return render_template('index.html', stream=stream)
+    return render_template('post.html', stream=stream)
 
 ######################################
 
