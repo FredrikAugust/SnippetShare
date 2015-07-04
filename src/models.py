@@ -8,7 +8,7 @@ from peewee import *
 from flask.ext.login import UserMixin
 from flask.ext.bcrypt import generate_password_hash
 
-DATABASE = SqliteDatabase('snippetshare.db')
+DATABASE = PostgresqlDatabase('snippetshare', host='localhost', port='5432')
 
 class User(UserMixin, Model):
 	username = CharField(unique=True)
