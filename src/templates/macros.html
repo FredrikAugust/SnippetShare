@@ -24,7 +24,7 @@
 			</div>
 			
 			<div class='col-sm-12'>
-				<pre><code class='{{ post.language }}'>{{ post.content }}</code></pre>
+				<a href='{{ url_for('post', post_id=post.id) }}'><pre><code class='{{ post.language }}'>{{ post.content }}</code></pre></a>
 				{% if post.user.username == g.user.username %}
 					<a class='small delete'>delete</a> | <a class='small edit'>edit</a>
 				{% endif %}

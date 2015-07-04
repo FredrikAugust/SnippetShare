@@ -245,6 +245,11 @@ def unfollow(username):
             flash('You are no longer following ' + to_user.username + '.', 'success')
     return redirect(url_for('index') + to_user.username)
 
+@app.route('/post/<int:post_id>')
+def post(post_id):
+    stream = models.Post.select().where(models.Post.id == post_id)
+    return render_template('index.html', stream=stream)
+
 ######################################
 
 if __name__ == '__main__':
