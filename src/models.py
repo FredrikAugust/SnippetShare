@@ -85,7 +85,7 @@ class Relationship(Model):
 	class Meta:
 		database = DATABASE
 		indexes = (
-			(('from_user', 'to_user'), True)
+			(('from_user', 'to_user'), True),
 		)
 
 def initialize():
