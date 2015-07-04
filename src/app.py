@@ -254,5 +254,4 @@ def post(post_id):
 
 if __name__ == '__main__':
     models.initialize()
-
-	app.run(debug=DEBUG, port=PORT, host=HOST)
+    app.run(debug=DEBUG, port=PORT, host=HOST)
