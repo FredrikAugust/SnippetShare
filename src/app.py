@@ -254,32 +254,5 @@ def post(post_id):
 
 if __name__ == '__main__':
     models.initialize()
-    try:
-        models.User.create_user(
-            username='MrMadsenMalmo',
-            password='password', 
-            admin=True
-        )
-
-        models.User.create_user(
-            username='Thomas',
-            password='password'
-        )
-
-        models.Post.create(
-            user=models.User.get(models.User.username == 'MrMadsenMalmo'),
-            content='console.log("Hello World!")',
-            language='javascript',
-            display_language=get_lang_name('javascript')
-        )
-
-        models.Post.create(
-            user=models.User.get(models.User.username == 'Thomas'),
-            content='console.log("Hello World from Thomas!")',
-            language='javascript',
-            display_language=get_lang_name('javascript')
-        )
-    except ValueError:
-        pass
 
 	app.run(debug=DEBUG, port=PORT, host=HOST)
