@@ -47,3 +47,12 @@
 .post_a {
 	text-decoration: none !important;
 }
+
+footer {
+	margin: 0 !important;
+}
+
+pre {
+	padding:0 !important;
+	border:0 !important;
+}

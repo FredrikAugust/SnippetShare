@@ -130,10 +130,10 @@ def new_post():
 
     return render_template('new_post.html', form=form)
 
-@app.route('/<profile>')
+@app.route('/<profile>', methods=['POST', 'GET'])
 def profile(profile):
     try:
-        user = models.User.select().where(models.User.username == profile).get()
+        user = models.User.get(models.User.username == profile)
     except Exception:
         return redirect(url_for('index'))
 

@@ -5,7 +5,7 @@
 
 {% block body %}
 
-<h1>{{ user.username }} {% if not g.user.username == user.username %}<a href='{{ url_for('index') }}{%if user.is_being_followed%}un{%endif%}follow/{{ user.username }}' class='small follow follow_{{ user.is_being_followed }} glyphicon glyphicon-heart'></a>{% else %} <a href='{{ url_for('edit_account', user=user.username) }}' class='small' id='edit-profile'>Edit</a>{% endif %}</h1>
+<h1>{{ user.username }} {% if not g.user.username == user.username %}<a href='{{ url_for('index') }}{%if user.is_being_followed%}un{%endif%}follow/{{ user.username }}' class='small follow follow_{{ user.is_being_followed }}'>Follow</a>{% else %} <a href='{{ url_for('edit_account', user=user.username) }}' class='small' id='edit-profile'>Edit</a>{% endif %}</h1>
 
 <!-- Profile stuff -->
 <h4>Followers: <span id='followers'>{{ user.followers.count() }}</span></h4>

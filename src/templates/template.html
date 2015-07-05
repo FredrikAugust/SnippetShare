@@ -3,25 +3,27 @@
 <head>
 	<title>{% block title %}| SnippetShare{% endblock %}</title>
 
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
 	<link rel="stylesheet" href='../static/site.css'>
 
 	<!-- Highlight.js -->
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/styles/default.min.css">
+	<link rel="stylesheet" href="../static/hljs_solarized_dark.min.css">
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/highlight.min.js"></script>
 	<script>hljs.initHighlightingOnLoad();</script>
 
 	<!-- Latest compiled and minified CSS -->
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+	<link rel="stylesheet" href="../static/bootstrap.css">
 
 	<!-- Optional theme -->
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">
+	<link rel="stylesheet" href="../static/bootswatch.min.css">
 </head>
 <body>
-	<nav class="navbar navbar-default navbar-collapse">
+	<nav class="navbar navbar-default navbar-fixed-top">
 	  <div class="container-fluid container">
 	    {% if not current_user.is_authenticated() %}
 	    <form class="navbar-form navbar-left" id='new_post_form'>
-			<a title='Home' href='{{ url_for('index') }}' class="btn btn-default glyphicon glyphicon-home" id='home_link'></a>
+			<a title='Home' href='{{ url_for('index') }}' id='home_link'></a>
 			<a href="{{ url_for('login') }}" class='hidden-sm hidden-md hidden-lg glyphicon glyphicon-off btn btn-default' title='Sign in'></a>
 		</form>
 		{% endif %}
@@ -30,10 +32,10 @@
 		    	<li><a href="{{ url_for('logout') }}" class='hidden-xs' title='Sign out'>Sign out</a></li>
 		    </ul>
 	    	<form class="navbar-form navbar-left" id='new_post_form'>
-	    		<a title='Home' href='{{ url_for('index') }}' class="btn btn-default glyphicon glyphicon-home" id='home_link'></a>
-		    	<a title='New Post' href='{{ url_for('new_post') }}' class="btn btn-default glyphicon glyphicon-pencil"></a>
-		    	<a title='Profile' href='{{ url_for('index') }}{{ current_user.username }}' class="btn btn-default glyphicon glyphicon-user"></a>
-		    	<a href="{{ url_for('logout') }}" class='hidden-md hidden-lg btn btn-default hidden-sm' title='Sign out'>Sign out</a>
+	    		<a title='Home' href='{{ url_for('index') }}' class="btn btn-default" id='home_link'>Home</a>
+		    	<a title='New Post' href='{{ url_for('new_post') }}' class="btn btn-default">New post</a>
+		    	<a title='Profile' href='{{ url_for('profile', profile=current_user.username) }}' class="btn btn-default">Profile</a>
+		    	<a href="{{ url_for('logout') }}" class='hidden-md btn-default hidden-lg btn hidden-sm' title='Sign out'>Sign out</a>
 		  	</form>
 	    {% else %}
 	    	<ul class="nav navbar-nav navbar-right">
