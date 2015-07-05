@@ -65,6 +65,8 @@ def after_request(response):
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
+    logout_user()
+
     form = forms.RegisterForm()
 
     if form.validate_on_submit():
@@ -85,6 +87,8 @@ def register():
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
+    logout_user()
+
     form = forms.LoginForm()
 
     if form.validate_on_submit():
