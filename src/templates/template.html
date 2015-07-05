@@ -36,6 +36,16 @@
 		    	<a title='New Post' href='{{ url_for('new_post') }}' class="btn btn-default">New post</a>
 		    	<a title='Profile' href='{{ url_for('profile', profile=current_user.username) }}' class="btn btn-default">Profile</a>
 		    	<a href="{{ url_for('logout') }}" class='hidden-md btn-default hidden-lg btn hidden-sm' title='Sign out'>Sign out</a>
+		    	<div class='dropdown'>
+			    	<a class="btn btn-default dropdown-toggle" data-toggle='dropdown' role='button' aria-expanded='false'>Categories <span class='caret'></span></a>
+			    	<ul class='dropdown-menu' role='menu'>
+			    		<li><a href='{{ url_for('search_cat', category='Auto-detect') }}'>Auto-detect</a></li>
+			    		<li class='divider'></li>
+			    		{% for language in LANGUAGES[1:] %}
+			    			<li><a href='{{ url_for('search_cat', category=language[1]) }}'>{{ language[1] }}</a></li>
+			    		{% endfor %}
+			    	</ul>
+		    	</div>
 		  	</form>
 	    {% else %}
 	    	<ul class="nav navbar-nav navbar-right">

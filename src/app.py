@@ -13,6 +13,8 @@ from flask.ext.login import (LoginManager, login_user,
                             current_user)
 from flask.ext.bcrypt import check_password_hash
 
+import languages
+
 import models
 import forms
 from logic import get_lang_name, get_short_name
@@ -128,7 +130,7 @@ def new_post():
         except TypeError:
             raise 'Encountered error while posting'
 
-    return render_template('new_post.html', form=form)
+    return render_template('new_post.html', form=form, LANGUAGES=languages.LANGUAGES)
 
 @app.route('/<profile>', methods=['POST', 'GET'])
 def profile(profile):
@@ -148,13 +150,13 @@ def profile(profile):
     except Exception:
         user.is_being_followed = False
 
-    return render_template('profile.html', stream=stream, user=user)
+    return render_template('profile.html', stream=stream, user=user, LANGUAGES=languages.LANGUAGES)
 
 @app.route('/')
 def index():
     stream = models.Post.select().limit(100)
 
-    return render_template('index.html', stream=stream)
+    return render_template('index.html', LANGUAGES=languages.LANGUAGES, stream=stream)
 
 @app.route('/search/')
 @app.route('/search/<query>', methods=['GET'])
@@ -172,7 +174,11 @@ def search(query=False):
                     .where(models.Post.content.contains(query))
                     .limit(100))
 
-    return render_template('index.html', stream=stream)
+    return render_template('index.html', stream=stream, LANGUAGES=languages.LANGUAGES)
+
+@app.route('/search_cat/<category>', methods=['GET'])
+def search_cat(category):
+    return redirect(url_for('search', query='@' + category))
 
 @app.route('/delete/<int:delete_id>', methods=['POST', 'GET'])
 @login_required
@@ -221,7 +227,7 @@ def edit(edit_id):
         form.content.data = target.content
         form.language.data = target.language
 
-    return render_template('edit_post.html', form=form, post=target)
+    return render_template('edit_post.html', form=form, post=target, LANGUAGES=languages.LANGUAGES)
 
 @app.route('/follow/<username>')
 @login_required
@@ -286,6 +292,7 @@ def edit_account(user):
                 flash('Encountered error while editing.', 'warning')
 
     return render_template('edit_user.html', form=form, user=target)
+    return render_template('edit_user.html', form=form, user=target, LANGUAGES=languages.LANGUAGES)
 
 @app.route('/<user>/delete', methods=['POST', 'GET'])
 def delete_account(user):
