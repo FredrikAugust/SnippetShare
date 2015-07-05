@@ -7,14 +7,6 @@ $(document).ready(function() {
 							$('#search_input').val();
 	});
 
-	// SEARCH CATEGORY
-	$('a#language').on('click', function(e) {
-		e.preventDefault();
-
-		window.location = $('#home_link').attr('href') + 'search/@' + 
-							$(this).text();
-	});
-
 	// DELETE
 	$('.delete').on('click', function(e) {
 		if ($(this).text() == 'delete') {

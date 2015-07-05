@@ -246,6 +246,7 @@ def follow(username):
             pass
         else:
             flash('You are now following ' + to_user.username + '.', 'success')
+
     return redirect(url_for('index') + to_user.username)
 
 @app.route('/unfollow/<username>')
@@ -265,6 +266,7 @@ def unfollow(username):
             pass
         else:
             flash('You are no longer following ' + to_user.username + '.', 'success')
+
     return redirect(url_for('index') + to_user.username)
 
 @app.route('/post/<int:post_id>')
@@ -311,6 +313,7 @@ def delete_account(user):
             return redirect(url_for('index'))
         except Exception:
             flash('Could not delete account.', 'warning')
+            
             return redirect(url_for('index'))
 
 ######################################
