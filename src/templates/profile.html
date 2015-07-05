@@ -14,7 +14,7 @@
 	{% else %}
 		<span class='small'>|</span> <a href='{{ url_for('edit_account', user=user.username) }}' class='small edit'>edit</a>
 	{% endif %}
-	{% if g.user._get_current_object().is_admin %} <span class='small'>|</span> <a href='{{ url_for('edit_account', user=user.username) }}' class='small edit'> edit</a>
+	{% if g.user._get_current_object().is_admin and not g.user._get_current_object().username == user.username %} <span class='small'>|</span> <a href='{{ url_for('edit_account', user=user.username) }}' class='small edit'> edit</a>
 	{% endif %}
 </h1>
 
