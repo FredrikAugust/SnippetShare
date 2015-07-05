@@ -214,7 +214,7 @@ def edit(edit_id):
             try:
                 models.Post.create(
                     timestamp=target.timestamp,
-                    user=g.user._get_current_object(),
+                    user=target.user,
                     content=form.content.data.strip(),
                     language=form.language.data,
                     display_language=get_lang_name(form.language.data)
