@@ -5,7 +5,18 @@
 
 {% block body %}
 
-<h1>{{ user.username }} {% if not g.user.username == user.username %}<a href='{{ url_for('index') }}{%if user.is_being_followed%}un{%endif%}follow/{{ user.username }}' class='small follow follow_{{ user.is_being_followed }} glyphicon glyphicon-heart'></a>{% else %} <a href='{{ url_for('edit_account', user=user.username) }}' class='small' id='edit-profile'>Edit</a>{% endif %}</h1>
+<h1>{{ user.username }} {% if not g.user.username == user.username %}
+	<span class='small'>|</span> <a href='{% if g.user._get_current_object() in user.followers %}
+			{{ url_for('unfollow', username=user.username) }}
+		{% else %}
+			{{ url_for('follow', username=user.username) }}
+		{% endif %}' class='small follow follow_{{ g.user in user.followers }}'>{% if g.user._get_current_object() in user.followers %}un{% endif %}follow</a>
+	{% else %}
+		<span class='small'>|</span> <a href='{{ url_for('edit_account', user=user.username) }}' class='small edit'>edit</a>
+	{% endif %}
+	{% if g.user._get_current_object().is_admin %} <span class='small'>|</span> <a href='{{ url_for('edit_account', user=user.username) }}' class='small edit'> edit</a>
+	{% endif %}
+</h1>
 
 <!-- Profile stuff -->
 <h4>Followers: <span id='followers'>{{ user.followers.count() }}</span></h4>

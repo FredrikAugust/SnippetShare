@@ -1,9 +1,9 @@
-LANGUAGES = [
-	('', 'Other'),
+LANGUAGES = sorted([
+	('', 'Auto-detect'),
 	('html', 'HTML'),
 	('css', 'CSS'),
 	('javascript', 'JavaScript'),
-	('cs', 'C-Sharp'),
+	('cs', 'C#'),
 	('cpp', 'C++'),
 	('python', 'Python'),
 	('ruby', 'Ruby'),
@@ -19,4 +19,4 @@ LANGUAGES = [
 	('lua', 'Lua'),
 	('c', 'C'),
 	('bash', 'Bash')
-]
+], key=lambda value: value[1])

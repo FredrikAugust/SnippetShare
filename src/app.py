@@ -13,6 +13,8 @@ from flask.ext.login import (LoginManager, login_user,
                             current_user)
 from flask.ext.bcrypt import check_password_hash
 
+import languages
+
 import models
 import forms
 from logic import get_lang_name, get_short_name
@@ -63,6 +65,8 @@ def after_request(response):
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
+    logout_user()
+
     form = forms.RegisterForm()
 
     if form.validate_on_submit():
@@ -83,6 +87,8 @@ def register():
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
+    logout_user()
+
     form = forms.LoginForm()
 
     if form.validate_on_submit():
@@ -128,12 +134,12 @@ def new_post():
         except TypeError:
             raise 'Encountered error while posting'
 
-    return render_template('new_post.html', form=form)
+    return render_template('new_post.html', form=form, LANGUAGES=languages.LANGUAGES)
 
-@app.route('/<profile>')
+@app.route('/<profile>', methods=['POST', 'GET'])
 def profile(profile):
     try:
-        user = models.User.select().where(models.User.username == profile).get()
+        user = models.User.get(models.User.username == profile)
     except Exception:
         return redirect(url_for('index'))
 
@@ -148,13 +154,13 @@ def profile(profile):
     except Exception:
         user.is_being_followed = False
 
-    return render_template('profile.html', stream=stream, user=user)
+    return render_template('profile.html', stream=stream, user=user, LANGUAGES=languages.LANGUAGES)
 
 @app.route('/')
 def index():
     stream = models.Post.select().limit(100)
 
-    return render_template('index.html', stream=stream)
+    return render_template('index.html', LANGUAGES=languages.LANGUAGES, stream=stream)
 
 @app.route('/search/')
 @app.route('/search/<query>', methods=['GET'])
@@ -172,7 +178,11 @@ def search(query=False):
                     .where(models.Post.content.contains(query))
                     .limit(100))
 
-    return render_template('index.html', stream=stream)
+    return render_template('index.html', stream=stream, LANGUAGES=languages.LANGUAGES)
+
+@app.route('/search_cat/<category>', methods=['GET'])
+def search_cat(category):
+    return redirect(url_for('search', query='@' + category))
 
 @app.route('/delete/<int:delete_id>', methods=['POST', 'GET'])
 @login_required
@@ -199,12 +209,12 @@ def edit(edit_id):
 
     form = forms.PostForm()
 
-    if target.user.username == current_user.username:
+    if target.user.username == current_user.username or current_user.is_admin:
         if form.validate_on_submit():
             try:
                 models.Post.create(
                     timestamp=target.timestamp,
-                    user=g.user._get_current_object(),
+                    user=target.user,
                     content=form.content.data.strip(),
                     language=form.language.data,
                     display_language=get_lang_name(form.language.data)
@@ -221,45 +231,49 @@ def edit(edit_id):
         form.content.data = target.content
         form.language.data = target.language
 
-    return render_template('edit_post.html', form=form, post=target)
+    return render_template('edit_post.html', form=form, post=target, LANGUAGES=languages.LANGUAGES)
 
-@app.route('/follow/<username>')
+@app.route('/<username>/follow', methods=['POST', 'GET'])
 @login_required
 def follow(username):
     try:
-        to_user = models.User.get(models.User.username**username)
+        to_user = models.User.get(models.User.username == username)
     except models.DoesNotExist:
+        flash('Relationship does not exist.', 'warning')
+        return redirect(url_for('profile', profile=username))
+
+    try:
+        models.Relationship.create(
+            from_user = g.user._get_current_object(),
+            to_user=to_user
+        )
+    except models.IntegrityError:
         pass
     else:
-        try:
-            models.Relationship.create(
-                from_user = g.user._get_current_object(),
-                to_user=to_user
-            )
-        except models.IntegrityError:
-            pass
-        else:
-            flash('You are now following ' + to_user.username + '.', 'success')
-    return redirect(url_for('index') + to_user.username)
+        flash('You are now following ' + to_user.username + '.', 'success')
 
-@app.route('/unfollow/<username>')
+    return redirect(url_for('profile', profile=username))
+
+@app.route('/<username>/unfollow', methods=['POST', 'GET'])
 @login_required
 def unfollow(username):
     try:
-        to_user = models.User.get(models.User.username**username)
+        to_user = models.User.get(models.User.username == username)
     except models.DoesNotExist:
-        pass
-    else:
-        try:
-            models.Relationship.get(
-                from_user = g.user._get_current_object(),
-                to_user=to_user
-            ).delete_instance()
-        except models.IntegrityError:
-            pass
-        else:
-            flash('You are no longer following ' + to_user.username + '.', 'success')
-    return redirect(url_for('index') + to_user.username)
+        flash('Could not unfollow {}'.username(username), 'warning')
+        return redirect(url_for('profile', profile=username))
+
+    try:
+        models.Relationship.get(
+            from_user = g.user._get_current_object(),
+            to_user= to_user
+        ).delete_instance()
+        
+        flash('You are no longer following ' + to_user.username + '.', 'success')
+    except models.IntegrityError:
+        flash('Could not unfollow {}'.username(username), 'warning')
+
+    return redirect(url_for('profile', profile=username))
 
 @app.route('/post/<int:post_id>')
 def post(post_id):
@@ -285,13 +299,25 @@ def edit_account(user):
             except TypeError:
                 flash('Encountered error while editing.', 'warning')
 
-    return render_template('edit_user.html', form=form, user=target)
+    elif current_user.is_admin:
+        if form.validate_on_submit():
+            try:
+                target.password=models.generate_password_hash(form.password.data)
+                target.save()
+
+                flash('Password changed for user {}.'.format(target.username), 'success')
+                return redirect(url_for('index'))
+
+            except TypeError:
+                flash('Encountered error while editing {}.'.format(target.username), 'warning')
+
+    return render_template('edit_user.html', form=form, user=target, LANGUAGES=languages.LANGUAGES)
 
 @app.route('/<user>/delete', methods=['POST', 'GET'])
 def delete_account(user):
     target = models.User.get(models.User.username == user)
 
-    if target.username == current_user.username:
+    if target.username == current_user.username or current_user.is_admin:
         try:
             for row in (models.Post.select()
                         .join(models.User)
@@ -304,10 +330,16 @@ def delete_account(user):
             return redirect(url_for('index'))
         except Exception:
             flash('Could not delete account.', 'warning')
+            
             return redirect(url_for('index'))
 
 ######################################
 
 if __name__ == '__main__':
     models.initialize()
+    try:
+        models.User.create_user('admin', 'admin', True)
+    except Exception:
+        pass
+
     app.run(debug=DEBUG, port=PORT, host=HOST)

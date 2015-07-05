@@ -11,7 +11,7 @@
 	cursor: pointer;
 }
 
-#edit-profile {
+.language {
 	cursor: pointer;
 }
 
@@ -30,7 +30,7 @@
 	}
 }
 
-.follow:hover {
+.follow:hover, .edit:hover {
 	text-decoration: none;
 	cursor:pointer;
 	color:#c0392b;
@@ -46,4 +46,29 @@
 
 .post_a {
 	text-decoration: none !important;
+}
+
+footer {
+	margin: 0 !important;
+}
+
+pre {
+	padding:0 !important;
+	border:0 !important;
+}
+
+.dropdown {
+	display: inline-block;
+}
+
+textarea, select, input {
+	background-color: #002b36 !important;
+	color: #839496 !important;
+}
+
+pre, code {
+	color: #839496 !important;
+	background: #002b36 !important;
+	padding: 0.5em !important;
+	font-size: inherit !important;
 }
