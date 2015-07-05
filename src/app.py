@@ -233,45 +233,47 @@ def edit(edit_id):
 
     return render_template('edit_post.html', form=form, post=target, LANGUAGES=languages.LANGUAGES)
 
-@app.route('/follow/<username>')
+@app.route('/<username>/follow', methods=['POST', 'GET'])
 @login_required
 def follow(username):
     try:
-        to_user = models.User.get(models.User.username**username)
+        to_user = models.User.get(models.User.username == username)
     except models.DoesNotExist:
+        flash('Relationship does not exist.', 'warning')
+        return redirect(url_for('profile', profile=username))
+
+    try:
+        models.Relationship.create(
+            from_user = g.user._get_current_object(),
+            to_user=to_user
+        )
+    except models.IntegrityError:
         pass
     else:
-        try:
-            models.Relationship.create(
-                from_user = g.user._get_current_object(),
-                to_user=to_user
-            )
-        except models.IntegrityError:
-            pass
-        else:
-            flash('You are now following ' + to_user.username + '.', 'success')
+        flash('You are now following ' + to_user.username + '.', 'success')
 
-    return redirect(url_for('index') + to_user.username)
+    return redirect(url_for('profile', profile=username))
 
-@app.route('/unfollow/<username>')
+@app.route('/<username>/unfollow', methods=['POST', 'GET'])
 @login_required
 def unfollow(username):
     try:
-        to_user = models.User.get(models.User.username**username)
+        to_user = models.User.get(models.User.username == username)
     except models.DoesNotExist:
-        pass
-    else:
-        try:
-            models.Relationship.get(
-                from_user = g.user._get_current_object(),
-                to_user=to_user
-            ).delete_instance()
-        except models.IntegrityError:
-            pass
-        else:
-            flash('You are no longer following ' + to_user.username + '.', 'success')
+        flash('Could not unfollow {}'.username(username), 'warning')
+        return redirect(url_for('profile', profile=username))
 
-    return redirect(url_for('index') + to_user.username)
+    try:
+        models.Relationship.get(
+            from_user = g.user._get_current_object(),
+            to_user= to_user
+        ).delete_instance()
+        
+        flash('You are no longer following ' + to_user.username + '.', 'success')
+    except models.IntegrityError:
+        flash('Could not unfollow {}'.username(username), 'warning')
+
+    return redirect(url_for('profile', profile=username))
 
 @app.route('/post/<int:post_id>')
 def post(post_id):

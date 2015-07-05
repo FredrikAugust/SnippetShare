@@ -11,10 +11,6 @@
 	cursor: pointer;
 }
 
-#edit-profile {
-	cursor: pointer;
-}
-
 .language {
 	cursor: pointer;
 }
@@ -34,7 +30,7 @@
 	}
 }
 
-.follow:hover {
+.follow:hover, .edit:hover {
 	text-decoration: none;
 	cursor:pointer;
 	color:#c0392b;
