@@ -20,7 +20,7 @@
 	{% for post in stream %}
 		<div class='row'>
 			<div class='col-xs-12'>
-				<p><a href='{{ url_for('index') }}{{ post.user.username }}'>{{ post.user.username }}</a> | <time data-time='{{ post.timestamp }}' class='disttime small' datetime='{{ post.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}'>{{ post.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}</time> | <a style='cursor:pointer;' id='language'>{{ post.display_language }}</a></p>
+				<p><a href='{{ url_for('index') }}{{ post.user.username }}'>{{ post.user.username }}</a> | <time data-time='{{ post.timestamp }}' class='disttime small' datetime='{{ post.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}'>{{ post.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}</time> | <a class='language' href='{{ url_for('search_cat', category=post.display_language) }}'>{{ post.display_language }}</a></p>
 			</div>
 			
 			<div class='col-sm-12'>
