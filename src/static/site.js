@@ -1,11 +1,4 @@
 $(document).ready(function() {
-	// SEARCH CONTENT
-	$('form#search').on('submit', function(e) {
-		e.preventDefault();
-		
-		window.location = $('#home_link').attr('href') + 'search/' + 
-							$('#search_input').val();
-	});
 
 	// DELETE
 	$('.delete').on('click', function(e) {
@@ -16,6 +9,7 @@ $(document).ready(function() {
 		}
 	});
 
+	// MARK POST
 	$('.post_a').on('click', function(event) {
 		if (/post/i.test(window.location) == true) {
 			event.preventDefault();
@@ -30,6 +24,7 @@ $(document).ready(function() {
 		}
 	});
 
+	// DELETE ACCOUNT
 	$('.delete_acc').on('click', function(e) {
 		if ($(this).text() == 'Delete account') {
 			e.preventDefault();
