@@ -15,6 +15,10 @@
 	cursor: pointer;
 }
 
+.language {
+	cursor: pointer;
+}
+
 #content {
 	font-family:monospace;
 }
@@ -55,4 +59,20 @@ footer {
 pre {
 	padding:0 !important;
 	border:0 !important;
+}
+
+.dropdown {
+	display: inline-block;
+}
+
+textarea, select, input {
+	background-color: #002b36 !important;
+	color: #839496 !important;
+}
+
+pre, code {
+	color: #839496 !important;
+	background: #002b36 !important;
+	padding: 0.5em !important;
+	font-size: inherit !important;
 }

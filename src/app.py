@@ -205,7 +205,7 @@ def edit(edit_id):
 
     form = forms.PostForm()
 
-    if target.user.username == current_user.username:
+    if target.user.username == current_user.username or current_user.is_admin:
         if form.validate_on_submit():
             try:
                 models.Post.create(
@@ -293,14 +293,25 @@ def edit_account(user):
             except TypeError:
                 flash('Encountered error while editing.', 'warning')
 
-    return render_template('edit_user.html', form=form, user=target)
+    elif current_user.is_admin:
+        if form.validate_on_submit():
+            try:
+                target.password=models.generate_password_hash(form.password.data)
+                target.save()
+
+                flash('Password changed for user {}.'.format(target.username), 'success')
+                return redirect(url_for('index'))
+
+            except TypeError:
+                flash('Encountered error while editing {}.'.format(target.username), 'warning')
+
     return render_template('edit_user.html', form=form, user=target, LANGUAGES=languages.LANGUAGES)
 
 @app.route('/<user>/delete', methods=['POST', 'GET'])
 def delete_account(user):
     target = models.User.get(models.User.username == user)
 
-    if target.username == current_user.username:
+    if target.username == current_user.username or current_user.is_admin:
         try:
             for row in (models.Post.select()
                         .join(models.User)
@@ -320,4 +331,9 @@ def delete_account(user):
 
 if __name__ == '__main__':
     models.initialize()
+    try:
+        models.User.create_user('admin', 'admin', True)
+    except Exception:
+        pass
+
     app.run(debug=DEBUG, port=PORT, host=HOST)
