@@ -48,6 +48,9 @@
 		    	</div>
 		  	</form>
 	    {% else %}
+	    	<form class="navbar-form navbar-left" id='new_post_form'>
+	    		<a title='Home' href='{{ url_for('index') }}' class="btn btn-default" id='home_link'>Home</a>
+			</form>
 	    	<ul class="nav navbar-nav navbar-right">
 		    	<li><a href="{{ url_for('login') }}" class='hidden-xs' title='Sign out'>Sign in</a></li>
 		    </ul>

@@ -1,5 +1,4 @@
 $(document).ready(function() {
-
 	// DELETE
 	$('.delete').on('click', function(e) {
 		if ($(this).text() == 'delete') {

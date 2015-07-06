@@ -275,10 +275,11 @@ def unfollow(username):
 
     return redirect(url_for('profile', profile=username))
 
-@app.route('/post/<int:post_id>')
+@app.route('/post/<int:post_id>', methods=['POST', 'GET'])
 def post(post_id):
     stream = models.Post.select().where(models.Post.id == post_id)
-    return render_template('post.html', stream=stream)
+
+    return render_template('post.html', stream=stream, LANGUAGES=languages.LANGUAGES)
 
 @app.route('/<user>/edit', methods=['GET', 'POST'])
 def edit_account(user):
