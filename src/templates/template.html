@@ -45,8 +45,11 @@
 	    	<ul class="navbar nav navbar-left" id='new_post_form'>
 	    		<a title='Home' href='{{ url_for('index') }}' class="btn btn-default" id='home_link'>
 	    		Home</a>
-	    		<a href="{{ url_for('login') }}" class='btn btn-default' title='Sign in'>Sign in</a>
+				<a href="{{ url_for('login') }}" class='btn btn-default hidden-sm hidden-md hidden-lg' title='Sign in'>Sign in</a>
 			</ul>
+			<ul class="nav navbar-nav navbar-right">
+		    	<li><a href="{{ url_for('login') }}" class='hidden-xs' title='Sign in'>Sign in</a></li>
+		    </ul>
 	    {% endif %}
 	    <!-- Search form -->
 	    <div class='collapse navbar-collapse' id="bs-example-navbar-collapse-1">
