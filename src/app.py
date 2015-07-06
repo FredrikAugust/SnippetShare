@@ -169,9 +169,9 @@ def search(query=False):
         flash('Please enter a search query.', 'warning')
         return redirect(url_for('index'))
 
-    if query[0] == '@':
+    if query in map(lambda x: x[1], languages.LANGUAGES):
         stream = (models.Post.select()
-                    .where(models.Post.language == get_short_name(query[1:]))
+                    .where(models.Post.language == get_short_name(query))
                     .limit(100))
     else:
         stream = (models.Post.select()
@@ -179,10 +179,6 @@ def search(query=False):
                     .limit(100))
 
     return render_template('index.html', stream=stream, LANGUAGES=languages.LANGUAGES)
-
-@app.route('/search_cat/<category>', methods=['GET'])
-def search_cat(category):
-    return redirect(url_for('search', query='@' + category))
 
 @app.route('/delete/<int:delete_id>', methods=['POST', 'GET'])
 @login_required

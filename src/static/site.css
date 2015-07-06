@@ -23,10 +23,14 @@
 	font-family:monospace;
 }
 
+.navbar, .nav {
+	margin-bottom: 0 !important;
+}
+
 @media (max-width:768px) {
 	#new_post_form {
-		border-top:0;
-		border-bottom:0;
+		border-top:0 !important;
+		border-bottom:0 !important;
 	}
 
 	.navbar-form {

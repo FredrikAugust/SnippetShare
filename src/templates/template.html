@@ -5,8 +5,6 @@
 
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 
-	<link rel="stylesheet" href='../static/site.css'>
-
 	<!-- Highlight.js -->
 	<link rel="stylesheet" href="../static/hljs_solarized_dark.min.css">
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/highlight.min.js"></script>
@@ -17,16 +15,12 @@
 
 	<!-- Optional theme -->
 	<link rel="stylesheet" href="../static/bootswatch.min.css">
+
+	<link rel="stylesheet" href='../static/site.css'>
 </head>
 <body>
 	<nav class="navbar navbar-default navbar-fixed-top">
 	  <div class="container-fluid container">
-	    {% if not current_user.is_authenticated() %}
-	    <form class="navbar-form navbar-left" id='new_post_form'>
-			<a title='Home' href='{{ url_for('index') }}' id='home_link'></a>
-			<a href="{{ url_for('login') }}" class='hidden-sm hidden-md hidden-lg glyphicon glyphicon-off btn btn-default' title='Sign in'></a>
-		</form>
-		{% endif %}
 	    {% if current_user.is_authenticated() %}
 		    <ul class="nav navbar-nav navbar-right">
 		    	<li><a href="{{ url_for('logout') }}" class='hidden-xs' title='Sign out'>Sign out</a></li>
@@ -39,25 +33,24 @@
 		    	<div class='dropdown'>
 			    	<a class="btn btn-default dropdown-toggle" data-toggle='dropdown' role='button' aria-expanded='false'>Categories <span class='caret'></span></a>
 			    	<ul class='dropdown-menu' role='menu'>
-			    		<li><a href='{{ url_for('search_cat', category='Auto-detect') }}'>Auto-detect</a></li>
+			    		<li><a href='{{ url_for('search', query='Auto-detect') }}'>Auto-detect</a></li>
 			    		<li class='divider'></li>
 			    		{% for language in LANGUAGES[1:] %}
-			    			<li><a href='{{ url_for('search_cat', category=language[1]) }}'>{{ language[1] }}</a></li>
+			    			<li><a href='{{ url_for('search', query=language[1]) }}'>{{ language[1] }}</a></li>
 			    		{% endfor %}
 			    	</ul>
 		    	</div>
 		  	</form>
 	    {% else %}
-	    	<form class="navbar-form navbar-left" id='new_post_form'>
-	    		<a title='Home' href='{{ url_for('index') }}' class="btn btn-default" id='home_link'>Home</a>
-			</form>
-	    	<ul class="nav navbar-nav navbar-right">
-		    	<li><a href="{{ url_for('login') }}" class='hidden-xs' title='Sign out'>Sign in</a></li>
-		    </ul>
+	    	<ul class="navbar nav navbar-left" id='new_post_form'>
+	    		<a title='Home' href='{{ url_for('index') }}' class="btn btn-default" id='home_link'>
+	    		Home</a>
+	    		<a href="{{ url_for('login') }}" class='btn btn-default' title='Sign in'>Sign in</a>
+			</ul>
 	    {% endif %}
-	    <!-- Collect the nav links, forms, and other content for toggling -->
+	    <!-- Search form -->
 	    <div class='collapse navbar-collapse' id="bs-example-navbar-collapse-1">
-	      <form class="navbar-form navbar-right" role="search" id='search'>
+	      <form class="navbar-form navbar-right" role="search" id='search' action='{{ url_for('search') }}'>
 	        <div class="form-group">
 	          <input type="text" class="form-control" id='search_input' placeholder="Search">
 	        </div>

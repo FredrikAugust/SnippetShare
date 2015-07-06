@@ -8,6 +8,20 @@ $(document).ready(function() {
 		}
 	});
 
+	var search_base = $('#search').attr('action')
+						.substring(1, $('#search').attr('action').length - 1);
+	var query;
+
+	// SEARCH
+	$('#search_input').on('keypress', function(e) {
+		query = $('#search_input').val();
+	});
+
+	$('#search').on('submit', function(e) {
+		e.preventDefault();
+		window.location = window.location + 'search/' + query;
+	});
+
 	// MARK POST
 	$('.post_a').on('click', function(event) {
 		if (/post/i.test(window.location) == true) {

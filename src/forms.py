@@ -62,6 +62,11 @@ class EditUserForm(Form):
 		]
 	)
 
+class SearchForm(Form):
+	query = StringField(
+		'search'
+	)
+
 class LoginForm(Form):
 	"""Validation for the registration form.
 	I decided not to use a username field as I feel it is 
