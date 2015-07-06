@@ -8,7 +8,8 @@ $(document).ready(function() {
 		}
 	});
 
-	var search_base = $('#search').attr('action');
+	var search_base = $('#search').attr('action')
+						.substring(1, $('#search').attr('action').length - 1);
 	var query;
 
 	// SEARCH
@@ -17,7 +18,8 @@ $(document).ready(function() {
 	});
 
 	$('#search').on('submit', function(e) {
-		$('#search').attr('action', search_base + query);
+		e.preventDefault();
+		window.location = window.location + 'search/' + query;
 	});
 
 	// MARK POST

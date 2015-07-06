@@ -33,10 +33,10 @@
 		    	<div class='dropdown'>
 			    	<a class="btn btn-default dropdown-toggle" data-toggle='dropdown' role='button' aria-expanded='false'>Categories <span class='caret'></span></a>
 			    	<ul class='dropdown-menu' role='menu'>
-			    		<li><a href='{{ url_for('search_cat', category='Auto-detect') }}'>Auto-detect</a></li>
+			    		<li><a href='{{ url_for('search', query='Auto-detect') }}'>Auto-detect</a></li>
 			    		<li class='divider'></li>
 			    		{% for language in LANGUAGES[1:] %}
-			    			<li><a href='{{ url_for('search_cat', category=language[1]) }}'>{{ language[1] }}</a></li>
+			    			<li><a href='{{ url_for('search', query=language[1]) }}'>{{ language[1] }}</a></li>
 			    		{% endfor %}
 			    	</ul>
 		    	</div>
@@ -48,7 +48,7 @@
 	    		<a href="{{ url_for('login') }}" class='btn btn-default' title='Sign in'>Sign in</a>
 			</ul>
 	    {% endif %}
-	    <!-- Collect the nav links, forms, and other content for toggling -->
+	    <!-- Search form -->
 	    <div class='collapse navbar-collapse' id="bs-example-navbar-collapse-1">
 	      <form class="navbar-form navbar-right" role="search" id='search' action='{{ url_for('search') }}'>
 	        <div class="form-group">
