@@ -8,6 +8,18 @@ $(document).ready(function() {
 		}
 	});
 
+	var search_base = $('#search').attr('action');
+	var query;
+
+	// SEARCH
+	$('#search_input').on('keypress', function(e) {
+		query = $('#search_input').val();
+	});
+
+	$('#search').on('submit', function(e) {
+		$('#search').attr('action', search_base + query);
+	});
+
 	// MARK POST
 	$('.post_a').on('click', function(event) {
 		if (/post/i.test(window.location) == true) {
