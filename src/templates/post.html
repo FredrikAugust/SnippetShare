@@ -1,11 +1,11 @@
 {% extends 'template.html' %}
 {% from 'macros.html' import render_stream %}
 
-{% block title %}Home {{ super() }}{% endblock %}
+{% block title %}Post {{ super() }}{% endblock %}
 
 {% block body %}
 
-<h1>{{ stream[0].user.username }} | {{ stream[0].timestamp }}</h1><hr>
+<h1>Post by <a class='monospace' href='{{ url_for('profile', profile=stream[0].user.username) }}'>{{ stream[0].user.username }}</a></h1><hr>
 
 {{ render_stream(stream) }}
 

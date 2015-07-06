@@ -2,6 +2,10 @@
 	padding:0;
 }
 
+.monospace {
+	font-family: monospace !important;
+}
+
 .delete {
 	color: #c0392b;
 	cursor:pointer;
