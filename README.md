@@ -1,4 +1,4 @@
-SnippetShare ![travis-status] (https://travis-ci.org/FredrikAugust/SnippetShare.svg?branch=prod)
+# SnippetShare ![travis-status] (https://travis-ci.org/FredrikAugust/SnippetShare.svg?branch=prod)
 __________________
 
 This is a simple social networking where you can share code snippets featuring syntax highlighting. 
