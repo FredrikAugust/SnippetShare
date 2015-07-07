@@ -8,7 +8,15 @@ from peewee import *
 from flask.ext.login import UserMixin
 from flask.ext.bcrypt import generate_password_hash
 
-DATABASE = PostgresqlDatabase('df8hplk2ie96f3', host='ec2-54-204-13-220.compute-1.amazonaws.com', port=5432, user='djjnnshhqbfdpu', password='qfP8frgggpq5sA65hXmie2GB6w')
+import os
+import re
+
+full = os.popen('heroku config:get DATABASE_URL').read()
+
+# regex <3
+result = re.search('(?P<dbname>[\w]+)\:\/\/(?P<username>[\w]+)\:(?P<password>[\w\d]+)\@(?P<server>[\w\d\.\-]+):(?P<port>[\d]+)\/(?P<database>[\w\d]+)\n', full, re.VERBOSE)
+
+DATABASE = PostgresqlDatabase(result.group('database'), host=result.group('server'), port=result.group('port'), user=result.group('username'), password=result.group('password'))
 
 class User(UserMixin, Model):
 	username = CharField(unique=True)
