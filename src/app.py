@@ -24,8 +24,7 @@ PORT = port = int(os.environ.get('PORT', 33507))
 HOST = '0.0.0.0'
 
 app = Flask(__name__)
-app.secret_key = ';abrov]pwdjoeiw9g-20[34I)(U)*(&T%*^& \
-                  %^$aay38794809#$xertcfhgvjkhbLVKGHFHGB]]]}{><?'
+app.secret_key = os.environ.get('secret_key', 'error')
 
 ########### LOGIN MANAGER ############
 
