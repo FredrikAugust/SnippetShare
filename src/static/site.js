@@ -51,3 +51,10 @@ $(document).ready(function() {
 		}
 	});
 });
+
+$(window).load(function() {
+	// Fades away each panel after 1 second + 1 second for each panel
+	$('.panel').each(function(index, element) {
+		setTimeout(function() { $(element).fadeOut() }, 2000 + parseInt(index) * 1000)
+	});
+});
