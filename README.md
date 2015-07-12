@@ -2,4 +2,4 @@
 
 This is a simple social networking where you can share code snippets featuring syntax highlighting. 
 
-Brought to you by [MrMadsenMalmo](http://mrmadsenmalmo.com)
+Created by [MrMadsenMalmo](http://mrmadsenmalmo.com)
